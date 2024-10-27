@@ -1,6 +1,7 @@
 module top.cubik65536.beeperfx {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
 
 
     opens top.cubik65536.beeperfx to javafx.fxml;

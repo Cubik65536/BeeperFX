@@ -4,15 +4,19 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import top.cubik65536.beeperfx.controllers.MainController;
+import top.cubik65536.beeperfx.controllers.SoundController;
 
+import javax.sound.sampled.LineUnavailableException;
 import java.io.IOException;
 
 public class MainApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException, LineUnavailableException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        fxmlLoader.setController(new MainController());
+        Scene scene = new Scene(fxmlLoader.load(), 320, 512);
+        stage.setTitle("FX Beeper");
         stage.setScene(scene);
         stage.show();
     }
