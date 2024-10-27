@@ -4,13 +4,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 
 import javax.sound.sampled.LineUnavailableException;
+import java.io.IOException;
 
 public class MainController {
     @FXML
     private CheckBox playSoundCheckBox;
 
     @FXML
-    public void initialize() throws LineUnavailableException {
+    public void initialize() throws LineUnavailableException, IOException {
         SoundController soundController = new SoundController();
         soundController.setUpSound();
 

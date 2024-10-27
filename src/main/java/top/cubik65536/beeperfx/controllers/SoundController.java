@@ -1,65 +1,78 @@
 package top.cubik65536.beeperfx.controllers;
 
+import top.cubik65536.beeperfx.model.Wave;
+
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.*;
 
 public class SoundController {
-    private static final int FRAMES_PER_WAVELENGTH = 32;
+    private static final int MAX_VOLUME = 127;
+    private static final int SAMPLE_RATE = 44100;
+
+    /**
+     * List that contains all Wave objects.
+     */
+    private List<Wave> waves;
 
     /**
      * The audio data clip to be played.
      */
     Clip clip;
 
+    /**
+     * Buffer to store the audio data.
+     */
+    byte[] buffer;
+
     public SoundController() throws LineUnavailableException {
+        waves = new ArrayList<>();
         this.clip = AudioSystem.getClip();
-    }
 
-    private static byte getByteValue(double angle) {
-        int maxVol = 127;
-        return Integer.valueOf((int) Math.round(Math.sin(angle) * maxVol)).byteValue();
-    }
+        Wave wave1 = new Wave(Wave.WaveTypes.SIN, 500, 1);
 
-    public void setUpSound() {
-        try {
-            generateTone();
-        } catch(Exception e) {
-            e.printStackTrace();
+        waves.add(wave1);
+
+        buffer = new byte[clip.getBufferSize()];
+        for (int i = 0; i < buffer.length; i++) {
+            double amplitude = 0;
+            for (Wave wave : waves) {
+                amplitude += wave.amplitude(0, i / (double) SAMPLE_RATE);
+            }
+            buffer[i] = getBufferValue(amplitude);
         }
     }
 
-    public void generateTone() {
+    private byte getBufferValue(double amplitude) {
+        return Integer.valueOf((int) Math.round(amplitude * MAX_VOLUME)).byteValue();
+    }
+
+    public void setUpSound() throws LineUnavailableException, IOException {
+        generateTone();
+    }
+
+    public void generateTone() throws LineUnavailableException, IOException {
         clip.stop();
         clip.close();
 
-        int wavelengths = 20;
-        byte[] buffer = new byte[2 * FRAMES_PER_WAVELENGTH * wavelengths];
         AudioFormat audioFormat = new AudioFormat(
-                44100,  // sample rate
+                SAMPLE_RATE,  // sample rate
                 8,  // sample size in bits
-                2,  // channels
+                1,  // channels
                 true,  // signed
-                false  // bigendian
+                false  // bigEndian
         );
 
-        for (int i = 0; i < FRAMES_PER_WAVELENGTH * wavelengths; i++) {
-            double angle = ((float) (i * 2) / ((float) FRAMES_PER_WAVELENGTH)) * (Math.PI);
-            buffer[i * 2] = getByteValue(angle);
-            buffer[(i * 2) + 1] = buffer[i * 2];
-        }
-
-        try {
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer);
-            AudioInputStream ais = new AudioInputStream(
-                    byteArrayInputStream,
-                    audioFormat,
-                    buffer.length / 2
-            );
-            clip.open(ais);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer);
+        AudioInputStream ais = new AudioInputStream(
+                byteArrayInputStream,
+                audioFormat,
+                buffer.length
+        );
+        clip.open(ais);
     }
 
     public void start() {
