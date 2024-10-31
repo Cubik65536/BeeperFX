@@ -1,5 +1,7 @@
 package top.cubik65536.beeperfx.model;
 
+import top.cubik65536.beeperfx.enums.WaveTypes;
+
 /**
  * This class represents a discrete wave in the simulation.
  * It have the following attributes to represent the wave: type (an `enum`, SIN or COS),
@@ -8,11 +10,6 @@ package top.cubik65536.beeperfx.model;
  * @author Qian Qian
  */
 public class Wave {
-    public enum WaveTypes {
-        SIN,
-        COS
-    }
-
     /**
      * The type of the wave (sin/cos).
      */

@@ -9,6 +9,7 @@
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <items>
             <CheckBox fx:id="playSoundCheckBox" mnemonicParsing="false" text="Play Sound" />
+            <Button fx:id="addWave" mnemonicParsing="false" text="Add Wave" />
          </items>
       </ToolBar>
    </bottom>
@@ -17,6 +18,15 @@
          <BorderPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </BorderPane.margin>
+         <children>
+            <TableView fx:id="wavesTableView" prefHeight="459.0" prefWidth="300.0">
+              <columns>
+                <TableColumn fx:id="typeColumn" prefWidth="75.0" text="Type" />
+                <TableColumn fx:id="frequencyColumn" prefWidth="75.0" text="Frequency" />
+                  <TableColumn fx:id="amplitudeColumn" prefWidth="75.0" text="Amplitude" />
+              </columns>
+            </TableView>
+         </children>
       </VBox>
    </center>
 </BorderPane>

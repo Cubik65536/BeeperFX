@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import top.cubik65536.beeperfx.controllers.MainController;
-import top.cubik65536.beeperfx.controllers.SoundController;
 
 import javax.sound.sampled.LineUnavailableException;
 import java.io.IOException;

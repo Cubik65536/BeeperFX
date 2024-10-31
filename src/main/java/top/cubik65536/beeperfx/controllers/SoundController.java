@@ -28,14 +28,18 @@ public class SoundController {
      */
     byte[] buffer;
 
-    public SoundController() throws LineUnavailableException {
+    public SoundController() throws LineUnavailableException, IOException {
         waves = new ArrayList<>();
         this.clip = AudioSystem.getClip();
+        refreshBuffer();
+        generateTone();
+    }
 
-        Wave wave1 = new Wave(Wave.WaveTypes.SIN, 500, 1);
+    private byte getBufferValue(double amplitude) {
+        return Integer.valueOf((int) Math.round(amplitude * MAX_VOLUME)).byteValue();
+    }
 
-        waves.add(wave1);
-
+    private void refreshBuffer() {
         buffer = new byte[clip.getBufferSize()];
         for (int i = 0; i < buffer.length; i++) {
             double amplitude = 0;
@@ -46,15 +50,7 @@ public class SoundController {
         }
     }
 
-    private byte getBufferValue(double amplitude) {
-        return Integer.valueOf((int) Math.round(amplitude * MAX_VOLUME)).byteValue();
-    }
-
-    public void setUpSound() throws LineUnavailableException, IOException {
-        generateTone();
-    }
-
-    public void generateTone() throws LineUnavailableException, IOException {
+    private void generateTone() throws LineUnavailableException, IOException {
         clip.stop();
         clip.close();
 
@@ -73,6 +69,12 @@ public class SoundController {
                 buffer.length
         );
         clip.open(ais);
+    }
+
+    public void addWave(Wave wave) throws LineUnavailableException, IOException {
+        waves.add(wave);
+        refreshBuffer();
+        generateTone();
     }
 
     public void start() {
